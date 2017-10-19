@@ -1,0 +1,53 @@
+<persistence xmlns="http://xmlns.jcp.org/xml/ns/persistence"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence
+             http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd"
+             version="2.1">
+
+    <persistence-unit name="HRS">
+        <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+        <properties>
+            <property name="javax.persistence.jdbc.driver"
+                      value="com.mysql.jdbc.Driver"/>
+
+            <property name="javax.persistence.jdbc.url"
+                      value="jdbc:mysql://localhost/employees?useSSL=false"/>
+
+            <property name="javax.persistence.jdbc.user"
+                      value="root"/>
+
+            <property name="javax.persistence.jdbc.password"
+                      value="ols13"/>
+
+            <property name="hibernate.show_sql"
+                      value="true"/>
+
+            <property name="hibernate.hbm2ddl.auto"
+                      value="validate"/>
+        </properties>
+    </persistence-unit>
+
+    <persistence-unit name="HRS-TEST">
+        <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+        <properties>
+            <property name="javax.persistence.jdbc.driver"
+                      value="com.mysql.jdbc.Driver"/>
+
+            <property name="javax.persistence.jdbc.url"
+                      value="jdbc:mysql://localhost/employees_test?useSSL=false"/>
+
+            <property name="javax.persistence.jdbc.user"
+                      value="root"/>
+
+            <property name="javax.persistence.jdbc.password"
+                      value="ols13"/>
+
+            <property name="hibernate.show_sql"
+                      value="true"/>
+
+            <property name="hibernate.hbm2ddl.auto"
+                      value="create-drop"/>
+        </properties>
+    </persistence-unit>
+
+</persistence>
