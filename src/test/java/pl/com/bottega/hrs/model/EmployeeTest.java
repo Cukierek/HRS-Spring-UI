@@ -1,6 +1,7 @@
 package pl.com.bottega.hrs.model;
 
 import org.junit.Test;
+import org.mockito.Mockito;
 
 import java.time.Duration;
 import java.time.LocalDate;
@@ -87,6 +88,23 @@ public class EmployeeTest {
 
     private Optional<Salary> getCurrentSalary() {
         return sut.getCurrentSalary();
+    }
+
+    @Test
+    public void shouldReturnEmptyDepartmentsWhenNoAssignment() {
+        assertEquals(0, sut.getCurrentDepartments().size());
+    }
+
+    //@Test
+    public void shouldAssignToManyDepartments() {
+        // when
+        Department d1 = Mockito.mock(Department.class);
+        Department d2 = Mockito.mock(Department.class);
+        sut.assignDepartment(d1);
+        sut.assignDepartment(d2);
+
+        // then
+        assertEquals(Arrays.asList(d1, d2), sut.getCurrentDepartments());
     }
 
 }

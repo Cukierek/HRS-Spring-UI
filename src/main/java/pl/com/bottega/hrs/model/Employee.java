@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "employees")
@@ -40,6 +41,10 @@ public class Employee {
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "emp_no")
     private Collection<Salary> salaries = new LinkedList<>();
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "emp_no")
+    private Collection<DepartmentAssignment> departmentAssignments = new LinkedList<>();
 
     Employee() {
     }
@@ -92,6 +97,19 @@ public class Employee {
         else {
             currentSalary.terminate();
         }
+    }
+
+    public void assignDepartment(Department department) {
+
+    }
+
+    public void unassignDepartment(Department department) {
+
+    }
+
+    public Collection<Department> getCurrentDepartments() {
+        return departmentAssignments.stream().
+                map((assignment) -> assignment.getDepartment()).collect(Collectors.toList());
     }
 
     public Optional<Salary> getCurrentSalary() {
