@@ -100,16 +100,26 @@ public class Employee {
     }
 
     public void assignDepartment(Department department) {
+        if(!isCurrentlyAssignedTo(department))
+            departmentAssignments.add(new DepartmentAssignment(empNo, department, timeProvider));
+    }
 
+    private boolean isCurrentlyAssignedTo(Department department) {
+        return getCurrentDepartments().contains(department);
     }
 
     public void unassignDepartment(Department department) {
-
+        departmentAssignments.stream().
+                filter((assignment) -> assignment.isAssigned(department)).
+                findFirst().
+                ifPresent(DepartmentAssignment::unassign);
     }
 
     public Collection<Department> getCurrentDepartments() {
         return departmentAssignments.stream().
-                map((assignment) -> assignment.getDepartment()).collect(Collectors.toList());
+                filter(DepartmentAssignment::isCurrent).
+                map(DepartmentAssignment::getDepartment).
+                collect(Collectors.toList());
     }
 
     public Optional<Salary> getCurrentSalary() {
@@ -120,7 +130,7 @@ public class Employee {
         return Optional.empty();*/
 
         return salaries.stream().
-                filter((salary) -> salary.isCurrent()).
+                filter(Salary::isCurrent).
                 findFirst();
     }
 
@@ -135,5 +145,9 @@ public class Employee {
                 ", gender=" + gender +
                 ", salaries= " + salaries.size() +
                 '}';
+    }
+
+    public Collection<DepartmentAssignment> getDepartmentsHistory() {
+        return departmentAssignments;
     }
 }

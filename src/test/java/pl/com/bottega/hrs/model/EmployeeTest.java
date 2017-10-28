@@ -25,6 +25,8 @@ public class EmployeeTest {
             LocalDate.parse("1960-01-01"),
             address,
             timeMachine);
+    private Department d1 = Mockito.mock(Department.class);
+    private Department d2 = Mockito.mock(Department.class);
 
     @Test
     public void shouldReturnNoSalaryIfNoSalaryDefined() {
@@ -95,16 +97,60 @@ public class EmployeeTest {
         assertEquals(0, sut.getCurrentDepartments().size());
     }
 
-    //@Test
+    @Test
     public void shouldAssignToManyDepartments() {
         // when
-        Department d1 = Mockito.mock(Department.class);
-        Department d2 = Mockito.mock(Department.class);
         sut.assignDepartment(d1);
         sut.assignDepartment(d2);
 
         // then
         assertEquals(Arrays.asList(d1, d2), sut.getCurrentDepartments());
+    }
+
+    @Test
+    public void shouldNotAssignTwiceToTheSameDepartment() {
+        // when
+        sut.assignDepartment(d1);
+        sut.assignDepartment(d1);
+
+        // then
+        assertEquals(Arrays.asList(d1), sut.getCurrentDepartments());
+    }
+
+    @Test
+    public void shouldUnassignDepratments() {
+        // when
+        sut.assignDepartment(d1);
+        sut.assignDepartment(d2);
+        sut.unassignDepartment(d2);
+
+        // then
+        assertEquals(Arrays.asList(d1), sut.getCurrentDepartments());
+    }
+
+    @Test
+    public void shouldKeepDepartmentsHistory() {
+        // when
+        timeMachine.travel(Duration.ofDays(-365 * 2));
+        LocalDate t0 = timeMachine.today();
+        sut.assignDepartment(d1);
+        timeMachine.travel(Duration.ofDays(365));
+        LocalDate t1 = timeMachine.today();
+        sut.assignDepartment(d2);
+        timeMachine.travel(Duration.ofDays(100));
+        LocalDate t2 = timeMachine.today();
+        sut.unassignDepartment(d2);
+
+        // then
+        Collection<DepartmentAssignment> history = sut.getDepartmentsHistory();
+        assertEquals(
+                Arrays.asList(t0, t1),
+                history.stream().map(DepartmentAssignment::getFromDate).collect(Collectors.toList())
+        );
+        assertEquals(
+                Arrays.asList(Constants.MAX_DATE, t2),
+                history.stream().map(DepartmentAssignment::getToDate).collect(Collectors.toList())
+        );
     }
 
 }

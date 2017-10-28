@@ -16,4 +16,18 @@ public class Department {
     @Column(name = "dept_name")
     private String name;
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Department that = (Department) o;
+
+        return deptNo.equals(that.deptNo);
+    }
+
+    @Override
+    public int hashCode() {
+        return deptNo.hashCode();
+    }
 }
