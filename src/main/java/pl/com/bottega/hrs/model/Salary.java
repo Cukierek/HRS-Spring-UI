@@ -14,19 +14,23 @@ public class Salary {
         @Column(name = "emp_no")
         private Integer empNo;
 
+        @Transient
+        private TimeProvider timeProvider;
+
         @Column(name = "from_date")
         private LocalDate fromDate;
 
         SalaryId() {
         }
 
-        public SalaryId(Integer empNo) {
+        public SalaryId(Integer empNo, TimeProvider timeProvider) {
             this.empNo = empNo;
-            this.fromDate = LocalDate.now();
+            this.timeProvider = timeProvider;
+            this.fromDate = timeProvider.today();
         }
 
         public boolean startsToday() {
-            return fromDate.isEqual(LocalDate.now());
+            return fromDate.isEqual(timeProvider.today());
         }
     }
 
@@ -35,24 +39,28 @@ public class Salary {
 
     private Integer salary;
 
+    @Transient
+    private TimeProvider timeProvider;
+
     @Column(name = "to_date")
     private LocalDate toDate;
 
     Salary() {
     }
 
-    public Salary(Integer empNo, Integer salary) {
-        id = new SalaryId(empNo);
+    public Salary(Integer empNo, Integer salary, TimeProvider timeProvider) {
+        id = new SalaryId(empNo, timeProvider);
         this.salary = salary;
+        this.timeProvider = timeProvider;
         toDate = Constants.MAX_DATE;
     }
 
     public boolean isCurrent() {
-        return toDate.isAfter(LocalDate.now());
+        return toDate.isAfter(timeProvider.today());
     }
 
     public void terminate() {
-        toDate = LocalDate.now();
+        toDate = timeProvider.today();
     }
 
     public boolean startsToday() {

@@ -17,6 +17,9 @@ public class Employee {
     @Column(name = "birth_date")
     private LocalDate birthDate;
 
+    @Transient
+    private TimeProvider timeProvider;
+
     @Column(name = "hire_date")
     private LocalDate hireDate;
 
@@ -41,12 +44,13 @@ public class Employee {
     Employee() {
     }
 
-    public Employee(Integer empNo, String firstName, String lastName, LocalDate birthDate, Address address) {
+    public Employee(Integer empNo, String firstName, String lastName, LocalDate birthDate, Address address, TimeProvider timeProvider) {
         this.empNo = empNo;
         this.firstName = firstName;
         this.lastName = lastName;
         this.birthDate = birthDate;
-        this.hireDate = LocalDate.now();
+        this.timeProvider = timeProvider;
+        this.hireDate = timeProvider.today();
         this.address = address;
     }
 
@@ -78,7 +82,7 @@ public class Employee {
     }
 
     private void addNewSalary(Integer newSalary) {
-        salaries.add(new Salary(empNo, newSalary));
+        salaries.add(new Salary(empNo, newSalary, timeProvider));
     }
 
     private void removeOrTerminateSalary(Integer newSalary, Salary currentSalary) {
@@ -92,7 +96,7 @@ public class Employee {
 
     public Optional<Salary> getCurrentSalary() {
         /*for(Salary salary : salaries) {
-            if(salary.getToDate().isAfter(LocalDate.now()))
+            if(salary.getToDate().isAfter(timeProvider.today()))
                 return Optional.of(salary);
         }
         return Optional.empty();*/

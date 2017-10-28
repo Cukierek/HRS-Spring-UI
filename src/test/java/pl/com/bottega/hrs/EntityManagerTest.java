@@ -6,6 +6,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import pl.com.bottega.hrs.model.Address;
 import pl.com.bottega.hrs.model.Employee;
+import pl.com.bottega.hrs.model.StandardTimeProvider;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -133,7 +134,7 @@ public class EntityManagerTest {
 
     private Employee createEmployee(String firstName) {
         Address address = new Address("al. Warszawska 10", "Lublin");
-        return new Employee(1, firstName, "Nowak", LocalDate.now(), address);
+        return new Employee(1, firstName, "Nowak", LocalDate.now(), address, new StandardTimeProvider());
     }
 
     private void updateFirstName(String newName, Employee employee) {
