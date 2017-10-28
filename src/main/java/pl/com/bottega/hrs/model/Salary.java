@@ -71,4 +71,12 @@ public class Salary {
         return salary;
     }
 
+    public LocalDate getFromDate() {
+        return id.fromDate;
+    }
+
+    public LocalDate getToDate() {
+        return toDate;
+    }
+
 }
