@@ -17,6 +17,17 @@ public class Salary {
         @Column(name = "from_date")
         private LocalDate fromDate;
 
+        SalaryId() {
+        }
+
+        public SalaryId(Integer empNo) {
+            this.empNo = empNo;
+            this.fromDate = LocalDate.now();
+        }
+
+        public boolean startsToday() {
+            return fromDate.isEqual(LocalDate.now());
+        }
     }
 
     @EmbeddedId
@@ -26,5 +37,30 @@ public class Salary {
 
     @Column(name = "to_date")
     private LocalDate toDate;
+
+    Salary() {
+    }
+
+    public Salary(Integer empNo, Integer salary) {
+        id = new SalaryId(empNo);
+        this.salary = salary;
+        toDate = Constants.MAX_DATE;
+    }
+
+    public boolean isCurrent() {
+        return toDate.isAfter(LocalDate.now());
+    }
+
+    public void terminate() {
+        toDate = LocalDate.now();
+    }
+
+    public boolean startsToday() {
+        return id.startsToday();
+    }
+
+    public int getValue() {
+        return salary;
+    }
 
 }
