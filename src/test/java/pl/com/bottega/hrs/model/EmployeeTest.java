@@ -79,7 +79,7 @@ public class EmployeeTest {
                 history.stream().map((s) -> s.getFromDate()).collect(Collectors.toList())
         );
         assertEquals(
-                Arrays.asList(t1, t2, Constants.MAX_DATE),
+                Arrays.asList(t1, t2, TimeProvider.MAX_DATE),
                 history.stream().map((s) -> s.getToDate()).collect(Collectors.toList())
         );
     }
@@ -148,9 +148,71 @@ public class EmployeeTest {
                 history.stream().map(DepartmentAssignment::getFromDate).collect(Collectors.toList())
         );
         assertEquals(
-                Arrays.asList(Constants.MAX_DATE, t2),
+                Arrays.asList(TimeProvider.MAX_DATE, t2),
                 history.stream().map(DepartmentAssignment::getToDate).collect(Collectors.toList())
         );
+    }
+
+    @Test
+    public void shouldReturnEmptyTitleIfNoTitleAssigned() {
+        assertFalse(getCurrentTitle().isPresent());
+    }
+
+    @Test
+    public void shouldChangeAndReturnTitle() {
+        //when
+        sut.changeTitle("CEO");
+
+        //then
+        assertTrue(getCurrentTitle().isPresent());
+        assertEquals("CEO", getCurrentTitleName());
+    }
+
+    @Test
+    public void shouldChangeTitleOnTheSameDay() {
+        // when
+        sut.changeTitle("CEO");
+        sut.changeTitle("cleaner");
+
+        // then
+        assertEquals("cleaner", getCurrentTitleName());
+    }
+
+    @Test
+    public void shouldKeepTitleHistory() {
+        timeMachine.travel(Duration.ofDays(-365 * 2));
+        LocalDate t0 = timeMachine.today();
+        sut.changeTitle("cleaner");
+        timeMachine.travel(Duration.ofDays(365));
+        LocalDate t1 = timeMachine.today();
+        sut.changeTitle("senior cleaner");
+        timeMachine.travel(Duration.ofDays(100));
+        LocalDate t2 = timeMachine.today();
+        sut.changeTitle("CEO");
+
+        // then
+        Collection<Title> history = sut.getTitleHistory();
+        assertEquals(3, history.size());
+        assertEquals(
+                Arrays.asList("cleaner", "senior cleaner", "CEO"),
+                history.stream().map(Title::getName).collect(Collectors.toList())
+        );
+        assertEquals(
+                Arrays.asList(t0, t1, t2),
+                history.stream().map(Title::getFromDate).collect(Collectors.toList())
+        );
+        assertEquals(
+                Arrays.asList(t1, t2, TimeProvider.MAX_DATE),
+                history.stream().map(Title::getToDate).collect(Collectors.toList())
+        );
+    }
+
+    private String getCurrentTitleName() {
+        return getCurrentTitle().get().getName();
+    }
+
+    private Optional<Title> getCurrentTitle() {
+        return sut.getCurrentTitle();
     }
 
 }

@@ -27,6 +27,7 @@ public class DepartmentAssignment {
 
     }
 
+    @Transient
     private TimeProvider timeProvider;
 
     @EmbeddedId
@@ -44,7 +45,7 @@ public class DepartmentAssignment {
         this.timeProvider = timeProvider;
         id = new DepartmentAssignmentId(empNo, department);
         fromDate = timeProvider.today();
-        toDate = Constants.MAX_DATE;
+        toDate = TimeProvider.MAX_DATE;
     }
 
     public Department getDepartment() {

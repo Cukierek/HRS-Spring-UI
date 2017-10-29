@@ -44,6 +44,11 @@ public class Employee {
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "emp_no")
+    private Collection<Title> titles = new LinkedList<>();
+
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "emp_no")
     private Collection<DepartmentAssignment> departmentAssignments = new LinkedList<>();
 
     Employee() {
@@ -78,11 +83,9 @@ public class Employee {
     }
 
     public void changeSalary(Integer newSalary) {
-        Optional<Salary> optionalSalary = getCurrentSalary();
-        if (optionalSalary.isPresent()) {
-            Salary currentSalary = optionalSalary.get();
-            removeOrTerminateSalary(newSalary, currentSalary);
-        }
+        getCurrentSalary().ifPresent((currentSalary) -> {
+            removeOrTerminateSalary(currentSalary);
+        });
         addNewSalary(newSalary);
     }
 
@@ -90,17 +93,16 @@ public class Employee {
         salaries.add(new Salary(empNo, newSalary, timeProvider));
     }
 
-    private void removeOrTerminateSalary(Integer newSalary, Salary currentSalary) {
-        if(currentSalary.startsToday()) {
+    private void removeOrTerminateSalary(Salary currentSalary) {
+        if (currentSalary.startsToday()) {
             salaries.remove(currentSalary);
-        }
-        else {
+        } else {
             currentSalary.terminate();
         }
     }
 
     public void assignDepartment(Department department) {
-        if(!isCurrentlyAssignedTo(department))
+        if (!isCurrentlyAssignedTo(department))
             departmentAssignments.add(new DepartmentAssignment(empNo, department, timeProvider));
     }
 
@@ -149,5 +151,23 @@ public class Employee {
 
     public Collection<DepartmentAssignment> getDepartmentsHistory() {
         return departmentAssignments;
+    }
+
+    public Optional<Title> getCurrentTitle() {
+        return titles.stream().filter(Title::isCurrent).findFirst();
+    }
+
+    public void changeTitle(String titleName) {
+        getCurrentTitle().ifPresent((t) -> {
+            if (t.startsToday())
+                titles.remove(t);
+            else
+                t.terminate();
+        });
+        titles.add(new Title(empNo, titleName, timeProvider));
+    }
+
+    public Collection<Title> getTitleHistory() {
+        return titles;
     }
 }

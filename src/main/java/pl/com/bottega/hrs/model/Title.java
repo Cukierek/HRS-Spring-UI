@@ -5,11 +5,11 @@ import java.io.Serializable;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "salaries")
-public class Salary {
+@Table(name = "titles")
+public class Title {
 
     @Embeddable
-    public static class SalaryId implements Serializable {
+    public static class TitleId implements Serializable {
 
         @Column(name = "emp_no")
         private Integer empNo;
@@ -20,55 +20,55 @@ public class Salary {
         @Column(name = "from_date")
         private LocalDate fromDate;
 
-        SalaryId() {
+        private String title;
+
+        TitleId() {
         }
 
-        public SalaryId(Integer empNo, TimeProvider timeProvider) {
+        public TitleId(Integer empNo, String title, TimeProvider timeProvider) {
             this.empNo = empNo;
             this.timeProvider = timeProvider;
+            this.title = title;
             this.fromDate = timeProvider.today();
         }
 
         public boolean startsToday() {
             return fromDate.isEqual(timeProvider.today());
         }
+
     }
-
-    @EmbeddedId
-    private SalaryId id;
-
-    private Integer salary;
 
     @Transient
     private TimeProvider timeProvider;
 
+    @EmbeddedId
+    private TitleId id;
+
     @Column(name = "to_date")
     private LocalDate toDate;
 
-    Salary() {
-    }
+    Title() {}
 
-    public Salary(Integer empNo, Integer salary, TimeProvider timeProvider) {
-        id = new SalaryId(empNo, timeProvider);
-        this.salary = salary;
+    public Title(Integer empNo, String titleName, TimeProvider timeProvider) {
+        this.id = new TitleId(empNo, titleName, timeProvider);
         this.timeProvider = timeProvider;
         toDate = TimeProvider.MAX_DATE;
+    }
+
+    public String getName() {
+        return id.title;
     }
 
     public boolean isCurrent() {
         return toDate.isAfter(timeProvider.today());
     }
 
-    public void terminate() {
-        toDate = timeProvider.today();
-    }
-
     public boolean startsToday() {
         return id.startsToday();
     }
 
-    public int getValue() {
-        return salary;
+    public void terminate() {
+        toDate = timeProvider.today();
     }
 
     public LocalDate getFromDate() {
