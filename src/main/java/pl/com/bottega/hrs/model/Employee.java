@@ -32,7 +32,7 @@ public class Employee {
 
     @Enumerated(value = EnumType.STRING)
     @Column(columnDefinition = "enum('M', 'F')")
-    private Gender gender;
+    private Gender gender = Gender.M;
 
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "address_id")

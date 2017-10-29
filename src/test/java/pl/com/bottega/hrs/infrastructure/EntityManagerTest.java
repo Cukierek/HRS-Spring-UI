@@ -1,9 +1,10 @@
-package pl.com.bottega.hrs;
+package pl.com.bottega.hrs.infrastructure;
 
 import org.hibernate.LazyInitializationException;
 import org.junit.After;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import pl.com.bottega.hrs.infrastructure.InfrastructureTest;
 import pl.com.bottega.hrs.model.Address;
 import pl.com.bottega.hrs.model.Employee;
 import pl.com.bottega.hrs.model.StandardTimeProvider;
@@ -19,21 +20,8 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
 
-public class EntityManagerTest {
+public class EntityManagerTest extends InfrastructureTest {
 
-    private static EntityManagerFactory emf;
-
-    @BeforeClass
-    public static void setUp() {
-        emf = Persistence.createEntityManagerFactory("HRS-TEST");
-    }
-
-    @After
-    public void cleanUp() {
-        executeInTransaction((em) -> {
-            em.createNativeQuery("DELETE FROM employees").executeUpdate();
-        });
-    }
 
     @Test
     public void tracksChangesToEntities() {
@@ -139,14 +127,6 @@ public class EntityManagerTest {
 
     private void updateFirstName(String newName, Employee employee) {
         employee.updateProfile(newName, "Nowak", LocalDate.now());
-    }
-
-    private void executeInTransaction(Consumer<EntityManager> consumer) {
-        EntityManager em = emf.createEntityManager();
-        em.getTransaction().begin();
-        consumer.accept(em);
-        em.close();
-        em.getTransaction().commit();
     }
 
 }
