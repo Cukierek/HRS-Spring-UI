@@ -69,16 +69,38 @@ public class EmployeeFinderTest extends InfrastructureTest {
         assertLastNames("Nowak", "Nowacki", "Kowalski");
     }
 
-    private Employee createEmployee(String firstName, String lastName) {
+    @Test
+    public void shouldFindByBirthDate() {
+        // given
+        createEmployee("Jan", "Nowak", "1960-01-01");
+        createEmployee("Jan", "Nowacki", "1970-01-01");
+        createEmployee("Jan", "Nowakowski", "1984-01-01");
+        createEmployee("Jan", "Kowalski", "1990-01-01");
+        createEmployee("Jan", "Kowalewski", "1995-01-01");
+
+        // when
+        criteria.setBirthDateFrom(LocalDate.parse("1970-01-01"));
+        criteria.setBirthDateTo(LocalDate.parse("1990-01-01"));
+        search();
+
+        // then
+        assertLastNames("Nowacki", "Nowakowski", "Kowalski");
+    }
+
+    private Employee createEmployee(String firstName, String lastName, String birthDate) {
         Address address = new Address("al. Warszawska 10", "Lublin");
         Employee employee = new Employee(number++, firstName, lastName,
-                LocalDate.now(), address, new StandardTimeProvider());
+                LocalDate.parse(birthDate), address, new StandardTimeProvider());
         executeInTransaction((em) -> em.persist(employee));
         return employee;
     }
 
     private Employee createEmployee(String lastName) {
-        return createEmployee("Czesiek", lastName);
+        return createEmployee("Czesiek", lastName, "1990-01-01");
+    }
+
+    private Employee createEmployee(String firstName, String lastName) {
+        return createEmployee(firstName, lastName, "1990-01-01");
     }
 
     private void search() {

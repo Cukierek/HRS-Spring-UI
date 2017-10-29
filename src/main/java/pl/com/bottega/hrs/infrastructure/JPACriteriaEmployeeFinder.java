@@ -44,6 +44,22 @@ public class JPACriteriaEmployeeFinder implements EmployeeFinder {
         Predicate predicate = cb.conjunction();
         predicate = addFirstNamePredicate(criteria, cb, employee, predicate);
         predicate = addLastNamePredicate(criteria, cb, employee, predicate);
+        predicate = addBirthDateFromPredicate(criteria, cb, employee, predicate);
+        predicate = addBirthDateToPredicate(criteria, cb, employee, predicate);
+        return predicate;
+    }
+
+    private Predicate addBirthDateToPredicate(EmployeeSearchCriteria criteria, CriteriaBuilder cb, Root employee, Predicate predicate) {
+        if(criteria.getBirthDateTo() != null) {
+            predicate = cb.and(predicate, cb.lessThanOrEqualTo(employee.get("birthDate"), criteria.getBirthDateTo()));
+        }
+        return predicate;
+    }
+
+    private Predicate addBirthDateFromPredicate(EmployeeSearchCriteria criteria, CriteriaBuilder cb, Root employee, Predicate predicate) {
+        if(criteria.getBirthDateFrom() != null) {
+            predicate = cb.and(predicate, cb.greaterThanOrEqualTo(employee.get("birthDate"), criteria.getBirthDateFrom()));
+        }
         return predicate;
     }
 
