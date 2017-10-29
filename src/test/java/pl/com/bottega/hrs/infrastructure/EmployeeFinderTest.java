@@ -109,6 +109,31 @@ public class EmployeeFinderTest extends InfrastructureTest {
         assertEquals(2, results.getPageNumber());
     }
 
+    //@Test
+    public void shouldSearchBySalary() {
+        //given
+        Employee nowak = createEmployee("Nowak");
+        Employee nowacki = createEmployee("Nowacki");
+        createEmployee("Kowalski");
+        executeInTransaction((em) -> {
+            nowak.changeSalary(50000);
+            em.merge(nowak);
+        });
+        executeInTransaction((em) -> {
+            nowacki.changeSalary(20000);
+            em.merge(nowacki);
+        });
+
+        //when
+        criteria.setSalaryFrom(45000);
+        criteria.setSalaryTo(60000);
+        search();
+
+        //then
+        assertLastNames("Nowak");
+    }
+
+
     private Employee createEmployee(String firstName, String lastName, String birthDate) {
         Address address = new Address("al. Warszawska 10", "Lublin");
         Employee employee = new Employee(number++, firstName, lastName,
