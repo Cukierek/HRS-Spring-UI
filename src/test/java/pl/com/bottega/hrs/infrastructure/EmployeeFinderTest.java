@@ -18,6 +18,10 @@ import static org.junit.Assert.assertEquals;
 public class EmployeeFinderTest extends InfrastructureTest {
 
     private int number = 1;
+    //private EmployeeFinder employeeFinder = new JPQLEmployeeFinder(createEntityManager());
+    private EmployeeFinder employeeFinder = new JPACriteriaEmployeeFinder(createEntityManager());
+    private EmployeeSearchCriteria criteria = new EmployeeSearchCriteria();
+    private EmployeeSearchResults results;
 
     @Test
     public void shouldFindByLastNameQuery() {
@@ -27,17 +31,11 @@ public class EmployeeFinderTest extends InfrastructureTest {
         createEmployee("Kowalski");
 
         // when
-        EmployeeSearchCriteria criteria = new EmployeeSearchCriteria();
         criteria.setLastNameQuery("nowa");
-        EmployeeFinder employeeFinder = new JPQLEmployeeFinder(createEntityManager());
-        EmployeeSearchResults results = employeeFinder.search(criteria);
+        search();
 
         // then
-        assertEquals(
-                Arrays.asList("Nowak", "Nowacki"),
-                results.getResults().stream().
-                        map(BasicEmployeeDto::getLastName).collect(Collectors.toList())
-        );
+        assertLastNames("Nowak", "Nowacki");
     }
 
     @Test
@@ -48,18 +46,12 @@ public class EmployeeFinderTest extends InfrastructureTest {
         createEmployee("Kowalski");
 
         // when
-        EmployeeSearchCriteria criteria = new EmployeeSearchCriteria();
         criteria.setLastNameQuery("nowa");
         criteria.setFirstNameQuery("Ja");
-        EmployeeFinder employeeFinder = new JPQLEmployeeFinder(createEntityManager());
-        EmployeeSearchResults results = employeeFinder.search(criteria);
+        search();
 
         // then
-        assertEquals(
-                Arrays.asList("Nowak"),
-                results.getResults().stream().
-                        map(BasicEmployeeDto::getLastName).collect(Collectors.toList())
-        );
+        assertLastNames("Nowak");
     }
 
     @Test
@@ -70,17 +62,11 @@ public class EmployeeFinderTest extends InfrastructureTest {
         createEmployee("Kowalski");
 
         // when
-        EmployeeSearchCriteria criteria = new EmployeeSearchCriteria();
         criteria.setFirstNameQuery("cze");
-        EmployeeFinder employeeFinder = new JPQLEmployeeFinder(createEntityManager());
-        EmployeeSearchResults results = employeeFinder.search(criteria);
+        search();
 
         // then
-        assertEquals(
-                Arrays.asList("Nowak", "Nowacki", "Kowalski"),
-                results.getResults().stream().
-                        map(BasicEmployeeDto::getLastName).collect(Collectors.toList())
-        );
+        assertLastNames("Nowak", "Nowacki", "Kowalski");
     }
 
     private Employee createEmployee(String firstName, String lastName) {
@@ -93,6 +79,18 @@ public class EmployeeFinderTest extends InfrastructureTest {
 
     private Employee createEmployee(String lastName) {
         return createEmployee("Czesiek", lastName);
+    }
+
+    private void search() {
+        results = employeeFinder.search(criteria);
+    }
+
+    private void assertLastNames(String... lastNames) {
+        assertEquals(
+                Arrays.asList(lastNames),
+                results.getResults().stream().
+                        map(BasicEmployeeDto::getLastName).collect(Collectors.toList())
+        );
     }
 
 }
