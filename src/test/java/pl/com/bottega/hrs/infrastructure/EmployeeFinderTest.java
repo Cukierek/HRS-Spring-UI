@@ -87,6 +87,28 @@ public class EmployeeFinderTest extends InfrastructureTest {
         assertLastNames("Nowacki", "Nowakowski", "Kowalski");
     }
 
+    @Test
+    public void shouldPaginateResults() {
+        // given
+        createEmployee("Nowak");
+        createEmployee("Nowacki");
+        createEmployee("Kowalski");
+        createEmployee("Kowalewski");
+        createEmployee("Kowalewska");
+
+        // when
+        criteria.setPageSize(2);
+        criteria.setPageNumber(2);
+        criteria.setFirstNameQuery("Cze");
+        search();
+
+        // then
+        assertLastNames("Kowalski", "Kowalewski");
+        assertEquals(5, results.getTotalCount());
+        assertEquals(3, results.getPagesCount());
+        assertEquals(2, results.getPageNumber());
+    }
+
     private Employee createEmployee(String firstName, String lastName, String birthDate) {
         Address address = new Address("al. Warszawska 10", "Lublin");
         Employee employee = new Employee(number++, firstName, lastName,

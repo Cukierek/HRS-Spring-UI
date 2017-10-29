@@ -34,10 +34,28 @@ public class JPACriteriaEmployeeFinder implements EmployeeFinder {
 
         cq.where(predicate);
         Query query = entityManager.createQuery(cq);
+        query.setMaxResults(criteria.getPageSize());
+        query.setFirstResult((criteria.getPageNumber() - 1) * criteria.getPageSize());
         List<BasicEmployeeDto> results = query.getResultList();
         EmployeeSearchResults employeeSearchResults = new EmployeeSearchResults();
         employeeSearchResults.setResults(results);
+        int total = searchTotalCount(criteria);
+        employeeSearchResults.setTotalCount(total);
+        employeeSearchResults.setPageNumber(criteria.getPageNumber());
+        employeeSearchResults.setPagesCount(total / criteria.getPageSize() +
+                (total % criteria.getPageSize() == 0 ? 0 : 1));
         return employeeSearchResults;
+    }
+
+    private int searchTotalCount(EmployeeSearchCriteria criteria) {
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Long> cq = cb.createQuery(Long.class);
+        Root employee = cq.from(Employee.class);
+        cq.select(cb.count(employee));
+        Predicate predicate = buildPredicate(criteria, cb, employee);
+        cq.where(predicate);
+        Query query = entityManager.createQuery(cq);
+        return ((Long) query.getSingleResult()).intValue();
     }
 
     private Predicate buildPredicate(EmployeeSearchCriteria criteria, CriteriaBuilder cb, Root employee) {
@@ -50,21 +68,21 @@ public class JPACriteriaEmployeeFinder implements EmployeeFinder {
     }
 
     private Predicate addBirthDateToPredicate(EmployeeSearchCriteria criteria, CriteriaBuilder cb, Root employee, Predicate predicate) {
-        if(criteria.getBirthDateTo() != null) {
+        if (criteria.getBirthDateTo() != null) {
             predicate = cb.and(predicate, cb.lessThanOrEqualTo(employee.get("birthDate"), criteria.getBirthDateTo()));
         }
         return predicate;
     }
 
     private Predicate addBirthDateFromPredicate(EmployeeSearchCriteria criteria, CriteriaBuilder cb, Root employee, Predicate predicate) {
-        if(criteria.getBirthDateFrom() != null) {
+        if (criteria.getBirthDateFrom() != null) {
             predicate = cb.and(predicate, cb.greaterThanOrEqualTo(employee.get("birthDate"), criteria.getBirthDateFrom()));
         }
         return predicate;
     }
 
     private Predicate addLastNamePredicate(EmployeeSearchCriteria criteria, CriteriaBuilder cb, Root employee, Predicate predicate) {
-        if(criteria.getLastNameQuery() != null) {
+        if (criteria.getLastNameQuery() != null) {
             predicate = cb.and(predicate,
                     cb.like(employee.get("lastName"), criteria.getLastNameQuery() + "%"));
         }
@@ -72,7 +90,7 @@ public class JPACriteriaEmployeeFinder implements EmployeeFinder {
     }
 
     private Predicate addFirstNamePredicate(EmployeeSearchCriteria criteria, CriteriaBuilder cb, Root employee, Predicate predicate) {
-        if(criteria.getFirstNameQuery() != null) {
+        if (criteria.getFirstNameQuery() != null) {
             predicate = cb.and(predicate,
                     cb.like(employee.get("firstName"), criteria.getFirstNameQuery() + "%"));
         }
