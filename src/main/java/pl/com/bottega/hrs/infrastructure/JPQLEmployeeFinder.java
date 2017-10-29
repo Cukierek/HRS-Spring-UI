@@ -21,10 +21,10 @@ public class JPQLEmployeeFinder implements EmployeeFinder {
         String jpql = "SELECT " +
                 "NEW pl.com.bottega.hrs.application.BasicEmployeeDto(e.empNo, e.firstName, e.lastName) " +
                 "FROM Employee e ";
-        String whereJpql = "";
+        String whereJpql = " 1 = 1 ";
 
         if(criteria.getLastNameQuery() != null) {
-            whereJpql += " e.lastName LIKE :lastName ";
+            whereJpql += "AND e.lastName LIKE :lastName ";
         }
 
         if(criteria.getFirstNameQuery() != null) {

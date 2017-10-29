@@ -62,6 +62,27 @@ public class EmployeeFinderTest extends InfrastructureTest {
         );
     }
 
+    @Test
+    public void shouldFindByFirstName() {
+        // given
+        createEmployee("Nowak");
+        createEmployee("Nowacki");
+        createEmployee("Kowalski");
+
+        // when
+        EmployeeSearchCriteria criteria = new EmployeeSearchCriteria();
+        criteria.setFirstNameQuery("cze");
+        EmployeeFinder employeeFinder = new JPQLEmployeeFinder(createEntityManager());
+        EmployeeSearchResults results = employeeFinder.search(criteria);
+
+        // then
+        assertEquals(
+                Arrays.asList("Nowak", "Nowacki", "Kowalski"),
+                results.getResults().stream().
+                        map(BasicEmployeeDto::getLastName).collect(Collectors.toList())
+        );
+    }
+
     private Employee createEmployee(String firstName, String lastName) {
         Address address = new Address("al. Warszawska 10", "Lublin");
         Employee employee = new Employee(number++, firstName, lastName,
