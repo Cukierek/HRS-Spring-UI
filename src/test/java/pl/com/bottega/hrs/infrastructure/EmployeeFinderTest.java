@@ -182,6 +182,33 @@ public class EmployeeFinderTest extends InfrastructureTest {
         assertLastNames("Nowacki");
     }
 
+    @Test
+    public void np1Demo() {
+        // given
+        int n = 5;
+        for (int i = 1; i <= 5; i++) {
+            employee().
+                    withSalary(20000, "1990-01-01").
+                    withSalary(50000).withLastName("Nowak " + i).create();
+        }
+
+        // when
+        executeInTransaction((entityManager) -> {
+            List<Employee> emps = entityManager.createQuery("SELECT DISTINCT(e) FROM Employee e " +
+                    "LEFT JOIN FETCH e.salaries " +
+                    "JOIN e.salaries s " +
+                    "LEFT JOIN FETCH e.address " +
+                    "WHERE s.toDate > :from"
+            ).setParameter("from", LocalDate.now()).
+                    getResultList();
+            for (Employee e : emps) {
+                System.out.println(e.getCurrentSalary().get());
+            }
+        });
+
+
+    }
+
     private void createDepartments() {
         d1 = new Department("d1", "Cleaning");
         d2 = new Department("d2", "Marketing");

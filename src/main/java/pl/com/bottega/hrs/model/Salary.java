@@ -40,7 +40,7 @@ public class Salary {
     private Integer salary;
 
     @Transient
-    private TimeProvider timeProvider;
+    private TimeProvider timeProvider = new StandardTimeProvider();
 
     @Column(name = "to_date")
     private LocalDate toDate;
