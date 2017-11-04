@@ -176,4 +176,8 @@ public class Employee {
     public Collection<Title> getTitleHistory() {
         return titles;
     }
+
+    public String getLastName() {
+        return lastName;
+    }
 }

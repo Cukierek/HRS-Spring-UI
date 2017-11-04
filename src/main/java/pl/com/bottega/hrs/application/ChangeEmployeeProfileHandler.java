@@ -14,7 +14,6 @@ public class ChangeEmployeeProfileHandler {
         this.repository = repository;
     }
 
-
     public void handle(ChangeEmployeeProfileCommand cmd) {
         Employee employee = repository.get(cmd.getEmpNo());
         employee.updateProfile(cmd.getFirstName(), cmd.getLastName(), cmd.getBirthDate(), cmd.getAddress(), cmd.getGender());
