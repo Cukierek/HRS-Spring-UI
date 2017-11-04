@@ -5,13 +5,11 @@ import pl.com.bottega.hrs.application.EmployeeFinder;
 import pl.com.bottega.hrs.application.EmployeeSearchCriteria;
 import pl.com.bottega.hrs.application.EmployeeSearchResults;
 import pl.com.bottega.hrs.model.Employee;
+import pl.com.bottega.hrs.model.TimeProvider;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
+import javax.persistence.criteria.*;
 import java.util.List;
 
 public class JPACriteriaEmployeeFinder implements EmployeeFinder {
@@ -33,6 +31,7 @@ public class JPACriteriaEmployeeFinder implements EmployeeFinder {
         Predicate predicate = buildPredicate(criteria, cb, employee);
 
         cq.where(predicate);
+        cq.distinct(true);
         Query query = entityManager.createQuery(cq);
         query.setMaxResults(criteria.getPageSize());
         query.setFirstResult((criteria.getPageNumber() - 1) * criteria.getPageSize());
@@ -64,6 +63,17 @@ public class JPACriteriaEmployeeFinder implements EmployeeFinder {
         predicate = addLastNamePredicate(criteria, cb, employee, predicate);
         predicate = addBirthDateFromPredicate(criteria, cb, employee, predicate);
         predicate = addBirthDateToPredicate(criteria, cb, employee, predicate);
+        predicate = addDepartmentsPredicate(criteria, cb, employee, predicate);
+        return predicate;
+    }
+
+    private Predicate addDepartmentsPredicate(EmployeeSearchCriteria criteria, CriteriaBuilder cb, Root employee, Predicate predicate) {
+        if(criteria.getDepartmentNumbers() != null && criteria.getDepartmentNumbers().size() > 0) {
+            Join deptAsgn = employee.join("departmentAssignments");
+            Join dept = deptAsgn.join("id").join("department");
+            predicate = cb.and(predicate, dept.get("deptNo").in(criteria.getDepartmentNumbers()));
+            predicate = cb.and(predicate, cb.equal(deptAsgn.get("toDate"), TimeProvider.MAX_DATE));
+        }
         return predicate;
     }
 

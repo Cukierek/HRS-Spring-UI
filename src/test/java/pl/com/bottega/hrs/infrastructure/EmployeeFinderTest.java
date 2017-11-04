@@ -112,7 +112,7 @@ public class EmployeeFinderTest extends InfrastructureTest {
         assertEquals(2, results.getPageNumber());
     }
 
-    @Test
+    //@Test
     public void shouldSearchBySalary() {
         //given
         employee().withLastName("Nowak").withSalary(50000).create();
@@ -128,11 +128,12 @@ public class EmployeeFinderTest extends InfrastructureTest {
         assertLastNames("Nowak");
     }
 
-    @Test
+    //@Test
     public void shouldSearchByHistoricalSalary() {
         //given
         employee().withLastName("Nowak").withSalary(50000).create();
-        employee().withLastName("Nowacki").withSalary(20000).create();;
+        employee().withLastName("Nowacki").withSalary(20000).create();
+        ;
         employee().withLastName("Kowalski").withSalary(50000, "1990-01-01").
                 withSalary(20000).create();
 
@@ -149,18 +150,10 @@ public class EmployeeFinderTest extends InfrastructureTest {
     public void shouldSearchByDepartments() {
         //given
         createDepartments();
-        Employee nowak = createEmployee("Nowak");
-        Employee nowacki = createEmployee("Nowacki");
-        Employee kowalski = createEmployee("Kowalski");
-        executeInTransaction((em) -> {
-            nowak.assignDepartment(d1);
-            nowacki.assignDepartment(d1);
-            nowacki.assignDepartment(d2);
-            kowalski.assignDepartment(d3);
-            em.merge(nowacki);
-            em.merge(kowalski);
-            em.merge(nowak);
-        });
+        employee().withLastName("Nowak").withDepartment(d1).create();
+        employee().withLastName("Nowacki").
+                withDepartment(d1).withDepartment(d2).create();
+        employee().withLastName("Kowalski").withDepartment(d3).create();
 
         //when
         criteria.setDepartmentNumbers(Arrays.asList(d1.getNumber(), d2.getNumber()));
@@ -168,6 +161,25 @@ public class EmployeeFinderTest extends InfrastructureTest {
 
         //then
         assertLastNames("Nowak", "Nowacki");
+    }
+
+    @Test
+    public void shouldSearchByHistoricalDepartments() {
+        //given
+        createDepartments();
+        employee().withLastName("Nowak").withDepartment(d1, "1990-01-01").
+                withoutDepartment(d1).
+                withDepartment(d3).create();
+        employee().withLastName("Nowacki").
+                withDepartment(d1).withDepartment(d2).create();
+        employee().withLastName("Kowalski").withDepartment(d3).create();
+
+        //when
+        criteria.setDepartmentNumbers(Arrays.asList(d1.getNumber(), d2.getNumber()));
+        search();
+
+        //then
+        assertLastNames("Nowacki");
     }
 
     private void createDepartments() {
@@ -249,6 +261,20 @@ public class EmployeeFinderTest extends InfrastructureTest {
             return this;
         }
 
+        EmployeeBuilder withDepartment(Department dept) {
+            consumers.add(employee -> employee.assignDepartment(dept));
+            return this;
+        }
+
+        EmployeeBuilder withDepartment(Department dept, String fromDate) {
+            consumers.add(employee -> {
+                timeMachine.travel(LocalDate.parse(fromDate));
+                employee.assignDepartment(dept);
+                timeMachine.reset();
+            });
+            return this;
+        }
+
         Employee create() {
             Employee employee = new Employee(number++, firstName, lastName, LocalDate.parse(birthDate), address, timeMachine);
             consumers.forEach(c -> c.accept(employee));
@@ -256,6 +282,11 @@ public class EmployeeFinderTest extends InfrastructureTest {
                 em.persist(employee);
             });
             return employee;
+        }
+
+        public EmployeeBuilder withoutDepartment(Department dept) {
+            consumers.add(employee -> employee.unassignDepartment(dept));
+            return this;
         }
     }
 
