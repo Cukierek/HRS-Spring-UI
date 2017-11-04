@@ -4,8 +4,7 @@ import pl.com.bottega.hrs.application.BasicEmployeeDto;
 import pl.com.bottega.hrs.application.EmployeeFinder;
 import pl.com.bottega.hrs.application.EmployeeSearchCriteria;
 import pl.com.bottega.hrs.application.EmployeeSearchResults;
-import pl.com.bottega.hrs.model.Employee;
-import pl.com.bottega.hrs.model.TimeProvider;
+import pl.com.bottega.hrs.model.*;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
@@ -26,7 +25,9 @@ public class JPACriteriaEmployeeFinder implements EmployeeFinder {
         CriteriaQuery<BasicEmployeeDto> cq = cb.createQuery(BasicEmployeeDto.class);
         Root employee = cq.from(Employee.class);
         cq.select(cb.construct(BasicEmployeeDto.class,
-                employee.get("empNo"), employee.get("firstName"), employee.get("lastName")));
+                employee.get(Employee_.empNo),
+                employee.get(Employee_.firstName),
+                employee.get(Employee_.lastName)));
 
         Predicate predicate = buildPredicate(criteria, cb, employee);
 
@@ -69,9 +70,9 @@ public class JPACriteriaEmployeeFinder implements EmployeeFinder {
 
     private Predicate addDepartmentsPredicate(EmployeeSearchCriteria criteria, CriteriaBuilder cb, Root employee, Predicate predicate) {
         if(criteria.getDepartmentNumbers() != null && criteria.getDepartmentNumbers().size() > 0) {
-            Join deptAsgn = employee.join("departmentAssignments");
-            Join dept = deptAsgn.join("id").join("department");
-            predicate = cb.and(predicate, dept.get("deptNo").in(criteria.getDepartmentNumbers()));
+            Join deptAsgn = employee.join(Employee_.departmentAssignments);
+            Join dept = deptAsgn.join(DepartmentAssignment_.id).join("department");
+            predicate = cb.and(predicate, dept.get(Department_.deptNo).in(criteria.getDepartmentNumbers()));
             predicate = cb.and(predicate, cb.equal(deptAsgn.get("toDate"), TimeProvider.MAX_DATE));
         }
         return predicate;
