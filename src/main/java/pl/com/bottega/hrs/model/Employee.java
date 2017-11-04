@@ -70,6 +70,12 @@ public class Employee {
         this.birthDate = birthDate;
     }
 
+    public void updateProfile(String firstName, String lastName, LocalDate birthDate, Address address, Gender gender) {
+        updateProfile(firstName, lastName, birthDate);
+        this.address = address;
+        this.gender = gender;
+    }
+
     public String getFirstName() {
         return firstName;
     }
