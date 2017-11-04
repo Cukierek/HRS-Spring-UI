@@ -16,6 +16,14 @@ public class Department {
     @Column(name = "dept_name")
     private String name;
 
+    Department() {
+    }
+
+    public Department(String deptNo, String name) {
+        this.deptNo = deptNo;
+        this.name = name;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -29,5 +37,9 @@ public class Department {
     @Override
     public int hashCode() {
         return deptNo.hashCode();
+    }
+
+    public String getNumber() {
+        return deptNo;
     }
 }
