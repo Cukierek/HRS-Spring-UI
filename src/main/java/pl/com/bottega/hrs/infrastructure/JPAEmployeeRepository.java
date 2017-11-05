@@ -1,10 +1,12 @@
 package pl.com.bottega.hrs.infrastructure;
 
+import org.springframework.stereotype.Component;
 import pl.com.bottega.hrs.model.Employee;
 import pl.com.bottega.hrs.model.repositories.EmployeeRepository;
 
 import javax.persistence.EntityManager;
 
+@Component
 public class JPAEmployeeRepository implements EmployeeRepository {
 
     private EntityManager entityManager;

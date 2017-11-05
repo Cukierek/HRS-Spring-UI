@@ -2,7 +2,7 @@ package pl.com.bottega.hrs;
 
 import pl.com.bottega.hrs.model.Address;
 import pl.com.bottega.hrs.model.Employee;
-import pl.com.bottega.hrs.model.StandardTimeProvider;
+import pl.com.bottega.hrs.infrastructure.StandardTimeProvider;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;

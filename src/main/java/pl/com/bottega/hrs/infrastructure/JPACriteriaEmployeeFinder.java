@@ -1,5 +1,6 @@
 package pl.com.bottega.hrs.infrastructure;
 
+import org.springframework.stereotype.Component;
 import pl.com.bottega.hrs.application.BasicEmployeeDto;
 import pl.com.bottega.hrs.application.EmployeeFinder;
 import pl.com.bottega.hrs.application.EmployeeSearchCriteria;
@@ -11,6 +12,7 @@ import javax.persistence.Query;
 import javax.persistence.criteria.*;
 import java.util.List;
 
+@Component
 public class JPACriteriaEmployeeFinder implements EmployeeFinder {
 
     private EntityManager entityManager;

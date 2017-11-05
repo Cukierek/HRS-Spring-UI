@@ -1,11 +1,13 @@
 package pl.com.bottega.hrs.application;
 
+import org.springframework.stereotype.Component;
 import pl.com.bottega.hrs.model.Department;
 import pl.com.bottega.hrs.model.Employee;
 import pl.com.bottega.hrs.model.commands.UnassignDepartmentCommand;
 import pl.com.bottega.hrs.model.repositories.DepartmentRepository;
 import pl.com.bottega.hrs.model.repositories.EmployeeRepository;
 
+@Component
 public class UnassignDepartmentHandler {
 
     private EmployeeRepository employeeRepository;

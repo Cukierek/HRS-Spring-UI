@@ -1,16 +1,17 @@
 
 package pl.com.bottega.hrs.application;
 
+import org.springframework.stereotype.Component;
 import pl.com.bottega.hrs.model.Employee;
 import pl.com.bottega.hrs.model.commands.ChangeEmployeeProfileCommand;
 import pl.com.bottega.hrs.model.repositories.EmployeeRepository;
 
+@Component
 public class ChangeEmployeeProfileHandler {
 
     private EmployeeRepository repository;
 
     public ChangeEmployeeProfileHandler(EmployeeRepository repository) {
-
         this.repository = repository;
     }
 

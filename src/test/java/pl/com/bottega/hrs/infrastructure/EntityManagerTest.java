@@ -1,19 +1,11 @@
 package pl.com.bottega.hrs.infrastructure;
 
 import org.hibernate.LazyInitializationException;
-import org.junit.After;
-import org.junit.BeforeClass;
 import org.junit.Test;
-import pl.com.bottega.hrs.infrastructure.InfrastructureTest;
 import pl.com.bottega.hrs.model.Address;
 import pl.com.bottega.hrs.model.Employee;
-import pl.com.bottega.hrs.model.StandardTimeProvider;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
 import java.time.LocalDate;
-import java.util.function.Consumer;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;

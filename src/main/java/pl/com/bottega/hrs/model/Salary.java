@@ -1,5 +1,7 @@
 package pl.com.bottega.hrs.model;
 
+import pl.com.bottega.hrs.infrastructure.StandardTimeProvider;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
