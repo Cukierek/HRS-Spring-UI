@@ -34,6 +34,7 @@ public class DetailedEmployeeDto extends BasicEmployeeDto {
         this.address = employee.getAddress();
         this.salary = employee.getCurrentSalary().map(Salary::getValue);
         this.title = employee.getCurrentTitle().map(Title::getName);
+        this.gender = employee.getGender();
         this.departmentNumbers = employee.getCurrentDepartments().stream().
                 map(Department::getNumber).
                 collect(Collectors.toList());

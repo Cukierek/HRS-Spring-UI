@@ -12,6 +12,7 @@ import pl.com.bottega.hrs.model.commands.AddDepartmentCommand;
 import pl.com.bottega.hrs.model.commands.AddEmployeeCommand;
 
 import java.time.LocalDate;
+import java.util.Arrays;
 
 import static org.junit.Assert.assertEquals;
 
@@ -49,11 +50,16 @@ public class CreateEmployeeTest {
         addEmployeeHandler.handle(addEmployeeCommand);
 
         // then
-        EmployeeSearchCriteria criteria = new EmployeeSearchCriteria();
-        criteria.setFirstNameQuery("Janek");
-        EmployeeSearchResults results = employeeFinder.search(criteria);
-        assertEquals(1, results.getTotalCount());
-        assertEquals("Janek", results.getResults().get(0).getFirstName());
+        DetailedEmployeeDto employeeDto = employeeFinder.getEmployeeDetails(1);
+        assertEquals("Janek", employeeDto.getFirstName());
+        assertEquals("Nowak", employeeDto.getLastName());
+        assertEquals(new Address("test", "test"), employeeDto.getAddress());
+        assertEquals(LocalDate.parse("1990-01-01"), employeeDto.getBirthDate());
+        assertEquals(LocalDate.now(), employeeDto.getHireDate());
+        assertEquals(Arrays.asList("d1"), employeeDto.getDepartmentNumbers());
+        assertEquals(Gender.M, employeeDto.getGender());
+        assertEquals(Integer.valueOf(50000), employeeDto.getSalary().get());
+        assertEquals("Junior Developer", employeeDto.getTitle().get());
     }
 
 }

@@ -192,4 +192,8 @@ public class Employee {
     public LocalDate getHireDate() {
         return hireDate;
     }
+
+    public Gender getGender() {
+        return gender;
+    }
 }

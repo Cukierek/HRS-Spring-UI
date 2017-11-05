@@ -1,15 +1,13 @@
 package pl.com.bottega.hrs.infrastructure;
 
 import org.springframework.stereotype.Component;
-import pl.com.bottega.hrs.application.BasicEmployeeDto;
-import pl.com.bottega.hrs.application.EmployeeFinder;
-import pl.com.bottega.hrs.application.EmployeeSearchCriteria;
-import pl.com.bottega.hrs.application.EmployeeSearchResults;
+import pl.com.bottega.hrs.application.*;
 import pl.com.bottega.hrs.model.*;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import javax.persistence.criteria.*;
+import javax.transaction.Transactional;
 import java.util.List;
 
 @Component
@@ -47,6 +45,15 @@ public class JPACriteriaEmployeeFinder implements EmployeeFinder {
         employeeSearchResults.setPagesCount(total / criteria.getPageSize() +
                 (total % criteria.getPageSize() == 0 ? 0 : 1));
         return employeeSearchResults;
+    }
+
+    @Override
+    @Transactional
+    public DetailedEmployeeDto getEmployeeDetails(Integer empNo) {
+        Employee employee = entityManager.find(Employee.class, empNo);
+        if(employee == null)
+            throw new NoSuchEntityException();
+        return new DetailedEmployeeDto(employee);
     }
 
     private int searchTotalCount(EmployeeSearchCriteria criteria) {
