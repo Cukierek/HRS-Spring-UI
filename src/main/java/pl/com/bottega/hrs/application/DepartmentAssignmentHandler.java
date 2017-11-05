@@ -1,6 +1,7 @@
 package pl.com.bottega.hrs.application;
 
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import pl.com.bottega.hrs.model.Employee;
 import pl.com.bottega.hrs.model.commands.AssignDepartmentToEmployeeCommand;
 import pl.com.bottega.hrs.model.repositories.DepartmentRepository;
@@ -20,6 +21,7 @@ public class DepartmentAssignmentHandler {
         this.departmentRepository = departmentRepository;
     }
 
+    @Transactional
     public void handle(AssignDepartmentToEmployeeCommand cmd) {
         Employee employee = employeeRepository.get(cmd.getEmpNo());
         employee.assignDepartment(departmentRepository.get(cmd.getDeptNo()));

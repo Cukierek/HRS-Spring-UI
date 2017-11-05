@@ -1,6 +1,7 @@
 package pl.com.bottega.hrs.application;
 
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import pl.com.bottega.hrs.model.Department;
 import pl.com.bottega.hrs.model.Employee;
 import pl.com.bottega.hrs.model.TimeProvider;
@@ -23,6 +24,7 @@ public class AddEmployeeHandler {
         this.timeProvider = timeProvider;
     }
 
+    @Transactional
     public void handle(AddEmployeeCommand cmd) {
         Employee employee = new Employee(
                 repository.generateNumber(),
