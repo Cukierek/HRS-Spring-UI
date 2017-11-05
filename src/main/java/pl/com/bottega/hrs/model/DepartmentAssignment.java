@@ -8,6 +8,7 @@ import java.time.LocalDate;
 @Table(name = "dept_emp")
 public class DepartmentAssignment {
 
+
     @Embeddable
     public static class DepartmentAssignmentId implements Serializable {
 

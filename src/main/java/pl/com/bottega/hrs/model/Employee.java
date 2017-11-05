@@ -180,4 +180,16 @@ public class Employee {
     public String getLastName() {
         return lastName;
     }
+
+    public Integer getEmpNo() {
+        return empNo;
+    }
+
+    public LocalDate getBirthDate() {
+        return birthDate;
+    }
+
+    public LocalDate getHireDate() {
+        return hireDate;
+    }
 }

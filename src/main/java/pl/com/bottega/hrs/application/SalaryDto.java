@@ -11,7 +11,9 @@ public class SalaryDto {
     private Integer salary;
 
     public SalaryDto(Salary salary) {
-
+        this.fromDate = salary.getFromDate();
+        this.toDate = salary.getToDate();
+        this.salary = salary.getValue();
     }
 
     public LocalDate getFromDate() {

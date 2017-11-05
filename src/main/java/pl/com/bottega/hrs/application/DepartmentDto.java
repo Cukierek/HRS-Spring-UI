@@ -1,5 +1,7 @@
 package pl.com.bottega.hrs.application;
 
+import pl.com.bottega.hrs.model.DepartmentAssignment;
+
 import java.time.LocalDate;
 
 public class DepartmentDto {
@@ -7,6 +9,12 @@ public class DepartmentDto {
     private LocalDate fromDate, toDate;
 
     private String deptNo;
+
+    public DepartmentDto(DepartmentAssignment assignment) {
+        this.fromDate = assignment.getFromDate();
+        this.toDate = assignment.getToDate();
+        this.deptNo = assignment.getDepartment().getNumber();
+    }
 
     public LocalDate getFromDate() {
         return fromDate;

@@ -1,5 +1,7 @@
 package pl.com.bottega.hrs.application;
 
+import pl.com.bottega.hrs.model.Title;
+
 import java.time.LocalDate;
 
 public class TitleDto {
@@ -7,6 +9,12 @@ public class TitleDto {
     private LocalDate fromDate, toDate;
 
     private String title;
+
+    public TitleDto(Title title) {
+        fromDate = title.getFromDate();
+        toDate = title.getToDate();
+        this.title = title.getName();
+    }
 
     public LocalDate getFromDate() {
         return fromDate;
