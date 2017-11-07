@@ -1,14 +1,9 @@
 package pl.com.bottega.hrs.ui.general;
 
-import com.vaadin.data.HasValue;
-import com.vaadin.server.UserError;
 import com.vaadin.shared.ui.ValueChangeMode;
 import com.vaadin.ui.*;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.xml.stream.events.Characters;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class PagingComponent extends CustomComponent {
