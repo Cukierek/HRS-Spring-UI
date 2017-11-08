@@ -1,6 +1,5 @@
 package pl.com.bottega.hrs.ui;
 
-import com.vaadin.annotations.StyleSheet;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.spring.annotation.SpringUI;
 import com.vaadin.ui.*;
