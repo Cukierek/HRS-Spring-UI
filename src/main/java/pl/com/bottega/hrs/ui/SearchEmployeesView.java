@@ -15,7 +15,6 @@ import pl.com.bottega.hrs.ui.general.UIConstants;
 import java.util.List;
 
 @SpringUI
-@StyleSheet({"http://fonts.googleapis.com/css?family=Cabin+Sketch"})
 public class SearchEmployeesView extends UI {
 
 	@Autowired
