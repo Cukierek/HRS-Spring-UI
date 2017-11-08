@@ -35,4 +35,16 @@ public class BasicEmployeeDto {
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }
+
+	@Override
+	public String toString() {
+    	StringBuilder sb = new StringBuilder();
+    	sb.append("Employee: ");
+    	sb.append(empNo);
+    	sb.append(", ");
+		sb.append(firstName);
+		sb.append(", ");
+		sb.append(lastName);
+		return sb.toString();
+	}
 }

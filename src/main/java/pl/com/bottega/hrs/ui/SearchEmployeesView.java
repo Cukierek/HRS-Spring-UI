@@ -1,5 +1,6 @@
 package pl.com.bottega.hrs.ui;
 
+import com.vaadin.annotations.StyleSheet;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.spring.annotation.SpringUI;
 import com.vaadin.ui.*;
@@ -14,6 +15,7 @@ import pl.com.bottega.hrs.ui.general.UIConstants;
 import java.util.List;
 
 @SpringUI
+@StyleSheet({"http://fonts.googleapis.com/css?family=Cabin+Sketch"})
 public class SearchEmployeesView extends UI {
 
 	@Autowired
@@ -84,8 +86,8 @@ public class SearchEmployeesView extends UI {
 	private void populateRootLayout() {
 		rootLayout.addComponent(searchTextFieldsLayout);
 		rootLayout.addComponent(employeesGrid);
-		HorizontalLayout pagingAndTotalSearchResultsLayout = new HorizontalLayout(totalResultsFoundLabel, pagingComponent);
-		rootLayout.addComponent(pagingAndTotalSearchResultsLayout);
+		rootLayout.addComponent(totalResultsFoundLabel);
+		rootLayout.addComponent(pagingComponent);
 	}
 
 	private void createRootLayout() {

@@ -54,10 +54,12 @@ public class PagingComponent extends CustomComponent {
 		pagingLayout.setComponentAlignment(lastPageLabel,Alignment.MIDDLE_CENTER);
 
 		HorizontalLayout comboLayout = new HorizontalLayout(resultsPerPageLabel, resultsPerPageComboBox);
-		comboLayout.setComponentAlignment(resultsPerPageLabel, Alignment.MIDDLE_CENTER);
+		comboLayout.setComponentAlignment(resultsPerPageLabel, Alignment.MIDDLE_LEFT);
 
 		HorizontalLayout rootLayout = new HorizontalLayout(comboLayout, pagingLayout);
 		rootLayout.setSizeFull();
+		rootLayout.setComponentAlignment(comboLayout, Alignment.MIDDLE_LEFT);
+		rootLayout.setComponentAlignment(pagingLayout, Alignment.MIDDLE_RIGHT);
 
 		setCompositionRoot(rootLayout);
 	}
