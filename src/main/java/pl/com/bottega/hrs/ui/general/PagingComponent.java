@@ -23,10 +23,10 @@ public class PagingComponent extends CustomComponent {
 	private Button nextPageButton;
 
 	public PagingComponent() {
-		resultsPerPageLabel = new Label("Wyników w tabeli");
+		resultsPerPageLabel = new Label(UIConstants.RESULTS_IN_TABLE_CAPTION);
 		resultsPerPageLabel.setSizeUndefined();
 		resultsPerPageComboBox = new ComboBox<>();
-		currentPageLabel = new Label("Strona:");
+		currentPageLabel = new Label(UIConstants.PAGE_LABEL);
 		currentPageTextField = new TextField();
 		currentPageTextField.setValue("1");
 		lastPageLabel = new Label(PAGE_COUNT_LABEL_DEFAULT_VALUE);
@@ -35,17 +35,13 @@ public class PagingComponent extends CustomComponent {
 		currentPageTextField.setWidth(5, Unit.EM);
 		currentPageTextField.setValueChangeMode(ValueChangeMode.BLUR);
 
-		firstPageButton = new Button("Pierwszy");
-		lastPageButton = new Button("Ostatni");
-		previousPageButton = new Button("Poprzedni");
-		nextPageButton = new Button("Następny");
+		firstPageButton = new Button(UIConstants.FIRST);
+		lastPageButton = new Button(UIConstants.LAST);
+		previousPageButton = new Button(UIConstants.PREVIOUS);
+		nextPageButton = new Button(UIConstants.NEXT);
 
-		List<Integer> resultsPerPageOptions = new ArrayList<>();
-		resultsPerPageOptions.add(5);
-		resultsPerPageOptions.add(10);
-		resultsPerPageOptions.add(20);
-		resultsPerPageOptions.add(50);
-		resultsPerPageOptions.add(100);
+		List<Integer> resultsPerPageOptions = createItemsForPerPageComboBox();
+
 		resultsPerPageComboBox.setItems(resultsPerPageOptions);
 		resultsPerPageComboBox.setEmptySelectionAllowed(false);
 		resultsPerPageComboBox.setSelectedItem(resultsPerPageOptions.get(2));
@@ -61,10 +57,19 @@ public class PagingComponent extends CustomComponent {
 		comboLayout.setComponentAlignment(resultsPerPageLabel, Alignment.MIDDLE_CENTER);
 
 		HorizontalLayout rootLayout = new HorizontalLayout(comboLayout, pagingLayout);
-		// rootLayout.setComponentAlignment(pagingLayout, Alignment.MIDDLE_RIGHT);
 		rootLayout.setSizeFull();
 
 		setCompositionRoot(rootLayout);
+	}
+
+	private List<Integer> createItemsForPerPageComboBox(){
+		List<Integer> items = new ArrayList<>(5);
+		items.add(5);
+		items.add(10);
+		items.add(20);
+		items.add(50);
+		items.add(100);
+		return items;
 	}
 
 	public int getPageSize() {
@@ -100,10 +105,6 @@ public class PagingComponent extends CustomComponent {
 
 	public void setDefaultValueForPagesCount() {
 		lastPageLabel.setValue(PAGE_COUNT_LABEL_DEFAULT_VALUE);
-	}
-
-	public Integer getCurrentPageValue() {
-		return Integer.parseInt(currentPageTextField.getValue());
 	}
 
 	public void setCurrentPageValue(Integer pagesCount) {

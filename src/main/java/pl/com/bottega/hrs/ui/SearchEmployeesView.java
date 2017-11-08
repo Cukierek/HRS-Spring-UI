@@ -9,6 +9,7 @@ import pl.com.bottega.hrs.application.EmployeeFinder;
 import pl.com.bottega.hrs.application.EmployeeSearchCriteria;
 import pl.com.bottega.hrs.application.EmployeeSearchResults;
 import pl.com.bottega.hrs.ui.general.PagingComponent;
+import pl.com.bottega.hrs.ui.general.UIConstants;
 
 import java.util.List;
 
@@ -61,9 +62,9 @@ public class SearchEmployeesView extends UI {
 
 	private void buildAndConfigureEmployeesGrid() {
 		employeesGrid = new Grid<>();
-		employeesGrid.addColumn(BasicEmployeeDto::getEmpNo).setCaption("Numer pracownika");
-		employeesGrid.addColumn(BasicEmployeeDto::getFirstName).setCaption("Imię");
-		employeesGrid.addColumn(BasicEmployeeDto::getLastName).setCaption("Nazwisko");
+		employeesGrid.addColumn(BasicEmployeeDto::getEmpNo).setCaption(UIConstants.EMPLOYEE_NUMBER);
+		employeesGrid.addColumn(BasicEmployeeDto::getFirstName).setCaption(UIConstants.FIRSTNAME);
+		employeesGrid.addColumn(BasicEmployeeDto::getLastName).setCaption(UIConstants.LASTNAME);
 		employeesGrid.setSelectionMode(Grid.SelectionMode.SINGLE);
 		employeesGrid.addSelectionListener(event -> {
 			if(event.getFirstSelectedItem().isPresent()) {
@@ -138,7 +139,7 @@ public class SearchEmployeesView extends UI {
 		else pagingComponent.setValueForPagesCountLabel(esr.getPagesCount());
 		previouslySearchedLastPageIndex = esr.getPagesCount();
 		pagingComponent.setCurrentPageValue(currentPageValue);
-		totalResultsFoundLabel.setValue(String.format("Znaleziono %d pracowników spełniających kryteria.", esr.getTotalCount()));
+		totalResultsFoundLabel.setValue(String.format(UIConstants.EMPLOYEES_FOUND_CAPTION, esr.getTotalCount()));
 	}
 
 	private EmployeeSearchResults getSearchResults(EmployeeSearchCriteria emc) {
@@ -157,8 +158,8 @@ public class SearchEmployeesView extends UI {
 	}
 
 	private void createSearchTextFields() {
-		firstNameSearchTextField = new TextField("Imię");
-		lastNameSearchTextField = new TextField("Nazwisko");
+		firstNameSearchTextField = new TextField(UIConstants.FIRSTNAME);
+		lastNameSearchTextField = new TextField(UIConstants.LASTNAME);
 	}
 
 	private void configureFilterFields() {
