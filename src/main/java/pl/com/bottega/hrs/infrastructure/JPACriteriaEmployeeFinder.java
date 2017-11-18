@@ -73,11 +73,57 @@ public class JPACriteriaEmployeeFinder implements EmployeeFinder {
         predicate = addLastNamePredicate(criteria, cb, employee, predicate);
         predicate = addBirthDateFromPredicate(criteria, cb, employee, predicate);
         predicate = addBirthDateToPredicate(criteria, cb, employee, predicate);
+        predicate = addHireDateFromPredicate(criteria, cb, employee, predicate);
+        predicate = addHireDateToPredicate(criteria, cb, employee, predicate);
+	    predicate = addSalaryFromPredicate(criteria, cb, employee, predicate);
+	    predicate = addSalaryToPredicate(criteria, cb, employee, predicate);
+	    predicate = addTitlesPredicate(criteria, cb, employee, predicate);
         predicate = addDepartmentsPredicate(criteria, cb, employee, predicate);
         return predicate;
     }
 
-    private Predicate addDepartmentsPredicate(EmployeeSearchCriteria criteria, CriteriaBuilder cb, Root employee, Predicate predicate) {
+	private Predicate addTitlesPredicate(EmployeeSearchCriteria criteria, CriteriaBuilder cb, Root employee, Predicate predicate) {
+		if(criteria.getTitles() != null && criteria.getTitles().size() > 0) {
+			Join title = employee.join(Employee_.titles);
+			predicate = cb.and(predicate, title.get(Title_.id).in(criteria.getTitles()));
+			predicate = cb.and(predicate, cb.equal(title.get("toDate"), TimeProvider.MAX_DATE));
+		}
+		return predicate;
+	}
+
+	private Predicate addSalaryToPredicate(EmployeeSearchCriteria criteria, CriteriaBuilder cb, Root employee, Predicate predicate) {
+		if (criteria.getSalaryTo() != null) {
+			Join salary = employee.join(Employee_.salaries);
+			predicate = cb.and(predicate, salary.get(Salary_.salary).in(criteria.getSalaryTo()));
+			//predicate = cb.and(predicate, cb.lessThanOrEqualTo(salary.get()));
+		}
+		return predicate;
+	}
+
+	private Predicate addSalaryFromPredicate(EmployeeSearchCriteria criteria, CriteriaBuilder cb, Root employee, Predicate predicate) {
+		if (criteria.getSalaryFrom() != null) {
+			Join salary = employee.join(Employee_.salaries);
+			predicate = cb.and(predicate, salary.get(Salary_.salary).in(criteria.getSalaryTo()));
+			predicate = cb.and(predicate, cb.greaterThanOrEqualTo(employee.get("salary"), criteria.getSalaryFrom()));
+		}
+		return predicate;
+	}
+
+	private Predicate addHireDateToPredicate(EmployeeSearchCriteria criteria, CriteriaBuilder cb, Root employee, Predicate predicate) {
+		if (criteria.getHireDateFrom() != null) {
+			predicate = cb.and(predicate, cb.greaterThanOrEqualTo(employee.get("hireDate"), criteria.getHireDateFrom()));
+		}
+		return predicate;
+	}
+
+	private Predicate addHireDateFromPredicate(EmployeeSearchCriteria criteria, CriteriaBuilder cb, Root employee, Predicate predicate) {
+		if (criteria.getHireDateTo() != null) {
+			predicate = cb.and(predicate, cb.lessThanOrEqualTo(employee.get("hireDate"), criteria.getHireDateTo()));
+		}
+		return predicate;
+	}
+
+	private Predicate addDepartmentsPredicate(EmployeeSearchCriteria criteria, CriteriaBuilder cb, Root employee, Predicate predicate) {
         if(criteria.getDepartmentNumbers() != null && criteria.getDepartmentNumbers().size() > 0) {
             Join deptAsgn = employee.join(Employee_.departmentAssignments);
             Join dept = deptAsgn.join(DepartmentAssignment_.id).join("department");
