@@ -32,6 +32,22 @@ public class JPQLEmployeeFinder implements EmployeeFinder {
             whereJpql += " AND e.firstName LIKE :firstName ";
         }
 
+        if(criteria.getBirthDateFrom() != null) {
+        	whereJpql += " AND e.birthDate >= :birthDateFrom";
+        }
+
+	    if(criteria.getBirthDateTo() != null) {
+		    whereJpql += " AND e.birthDate <= :birthDateTo";
+	    }
+
+	    if(criteria.getHireDateFrom() != null) {
+		    whereJpql += " AND e.hireDate >= :hireDateFrom";
+	    }
+
+	    if(criteria.getHireDateTo() != null) {
+		    whereJpql += " AND e.hireDate <= :hireDateTo";
+	    }
+
         Query query = entityManager.createQuery(jpql + "WHERE" +  whereJpql);
         if(criteria.getLastNameQuery() != null) {
             query.setParameter("lastName", criteria.getLastNameQuery() + "%");
@@ -39,6 +55,19 @@ public class JPQLEmployeeFinder implements EmployeeFinder {
         if(criteria.getFirstNameQuery() != null) {
             query.setParameter("firstName", criteria.getFirstNameQuery() + "%");
         }
+	    if(criteria.getBirthDateFrom() != null) {
+		    query.setParameter("birthDateFrom", criteria.getBirthDateFrom());
+	    }
+	    if(criteria.getBirthDateTo() != null) {
+		    query.setParameter("birthDateTo", criteria.getBirthDateTo());
+	    }
+	    if(criteria.getHireDateFrom() != null) {
+		    query.setParameter("hireDateFrom", criteria.getHireDateFrom() + "%");
+	    }
+	    if(criteria.getHireDateTo() != null) {
+		    query.setParameter("hireDateTo", criteria.getHireDateTo() + "%");
+	    }
+
         results.setResults(query.getResultList());
         return results;
     }
